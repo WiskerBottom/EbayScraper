@@ -25,9 +25,10 @@ y_axis = []
 x_axis = []
 key_list = []
 
+user = '' #change this to the name of the user that will run this program.
+path = '' #change this to be the path that the program will be running this.
 
-
-os.chdir('/home/kira/Documents/EbayScrapper/Details/')
+os.chdir(path + 'Details/')
 
 dates = []
 CardNames = []
@@ -42,7 +43,7 @@ InitialDate = input()
 
 MaxFileSize = 0
 MaxFileName = 0
-for file in os.listdir('/home/kira/Documents/EbayScrapper/Details/'):
+for file in os.listdir(path + 'Details/'):
     dates.append(int(file))
     f = open(str(file), 'r')
     contents = f.readlines()
@@ -64,7 +65,7 @@ print("MaxFileSize " + str(MaxFileSize) + " in " + MaxFileName)
 
 #exit() #Stage 1
 
-for file in os.listdir('/home/kira/Documents/EbayScrapper/Details/'):
+for file in os.listdir(path + 'Details/'):
     #print(file)
     f = open(str(file), 'r')
     contents = f.readlines()
@@ -292,4 +293,5 @@ plt.xlabel('Date')
 plt.ylabel('Price')
 plt.title('gpu pricing')
 plt.legend()
-plt.savefig('/home/kira/Documents/EbayScrapper/Gpu_Price_Graph.png', dpi=300)
+plt.savefig(path + 'Gpu_Price_Graph.png', dpi=300)
+
