@@ -9,7 +9,7 @@ from datetime import date
 import time
 import os
 
-path = "" #The path you're storing the program in
+path = "/app" #The path you're storing the program in
 user = "" #The name of the user you are running this with
 
 chrome_options = Options()
@@ -30,19 +30,21 @@ inputs.sort()
 
 
 driver.get("https://www.ebay.com/")
+time.sleep(1)
 
-#time.sleep(10)
 #Advanced Settings button click
-driver.find_element("xpath", '/html/body/header/table/tbody/tr/td[5]/form/table/tbody/tr/td[4]/a').click()
+driver.find_element("xpath", '//*[@id="gh-f"]/div[2]/a').click()
+time.sleep(1)
+
 #Sold Listings Only button click
-driver.find_element("xpath", "/html/body/div[3]/div[4]/div/div/div/div/form/fieldset[2]/label[3]/input").click()
+driver.find_element("xpath", """//*[@id="s0-1-17-5[1]-[2]-LH_Sold"]""").click()
+time.sleep(1)
 
 #Do a initial search to apply filter
-InitialSearch = driver.find_element("xpath", "/html/body/div[3]/div[4]/div/div/div/div/form/fieldset[1]/div[1]/input")
+InitialSearch = driver.find_element("xpath", """//*[@id="_nkw"]""")
 InitialSearch.clear()
 InitialSearch.send_keys("Graphics Card")
 InitialSearch.submit()
-
 time.sleep(1)
 
 #initialsearch = driver.find_elements("xpath", '/html/body/header/table/tbody/tr/td[5]/form/table/tbody/tr/td[1]/div[1]/div/input[1]')
@@ -50,6 +52,10 @@ time.sleep(1)
 #for item in initialsearch:
 #    item.clear()
 #    item.submit()
+
+f = open("/app/Details/cat.txt", "a")
+f.write("boo!\n")
+f.close()
 
 os.chdir(path + '/Details/')
 if os.path.exists(str(date.today())) == True:
@@ -62,15 +68,17 @@ os.chdir(path)
 
 FirstRun = True
 for item in inputs:
+    time.sleep(1)
+    print("item: " + item)
     input = item
     CombinedAverages = 0
     TestLoop = 0
 
-    while TestLoop < 3:
+    while TestLoop < 1: # I don't know why there are multiple loops every search returns the same thing?
         TestLoop = TestLoop + 1
 
         if FirstRun == True:
-            search = driver.find_element("xpath",'/html/body/div[5]/div[1]/div[1]/div[1]/header/table/tbody/tr/td[5]/form/table/tbody/tr/td[1]/div[1]/div/input[1]')
+            search = driver.find_element("xpath",'//*[@id="gh-ac"]') #yes this used to matter and now it doesn't, but I'm not changing it
 
             search.clear()
 
@@ -80,25 +88,24 @@ for item in inputs:
             
             FirstRun = False
         else: 
-            search = driver.find_element("xpath",'/html/body/div[3]/header/table/tbody/tr/td[5]/form/table/tbody/tr/td[1]/div[1]/div/input[1]')
+            search = driver.find_element("xpath",'//*[@id="gh-ac"]')
 
             search.clear()
 
             search.send_keys(input + " graphics card")
 
             search.submit()
-
-        prices = driver.find_elements("class name", "s-item__price")
+	
+        time.sleep(5)
+        prices = driver.find_elements(By.XPATH, ".//span[@class='s-item__price']/span[@class='POSITIVE']")
 
         AddedPrices = 0
         NumberOfPrices = 0
         counter = 0
         #print("PRICES: " + str(prices[0]))
-        #time.sleep(1)
         driver.get_screenshot_as_file(path)
         for data in prices:
-            #print(data)
-            if (counter % 2) != 0 and counter <= 15:
+            if counter <= 20: #there used to be a AND here making it only do every other item I removed this and it sill seems to work
                 print("Added price:" + str(data.text))
                 #if data.text.find(" ") != -1 or data.text.find("") != -1:
                 #    print("Canceled line: " + str(data.text))
@@ -125,7 +132,7 @@ for item in inputs:
         CombinedAverages = CombinedAverages + AddedPrices/NumberOfPrices
 
     f.write(input + '\n')
-    f.write(str(CombinedAverages/3) + '\n')
+    f.write(str(CombinedAverages/TestLoop) + '\n')
     #print("Total Average for " + str(input) + ": " + str(CombinedAverages/3))
 
 driver.quit()

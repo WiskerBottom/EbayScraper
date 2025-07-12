@@ -1,0 +1,11 @@
+services:
+  scraper:
+    container_name: EbayScrapper
+    user: root:root
+    shm_size: 2g
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Details:/app/Details
+    command: python3 test.py
