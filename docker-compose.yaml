@@ -8,4 +8,4 @@ services:
       - "8000:8000"
     volumes:
       - ./Details:/app/Details
-    command: python3 test.py
+    command: python3 EbayScrapperV4.py

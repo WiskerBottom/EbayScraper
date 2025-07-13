@@ -9,6 +9,7 @@ from datetime import date
 import time
 import os
 
+
 path = "/app" #The path you're storing the program in
 user = "" #The name of the user you are running this with
 
@@ -25,9 +26,13 @@ driver.set_window_size(1024, 768)
 
 #exit()
 
-inputs = ['rtx 3070', 'rtx 3060', 'rtx 3050', 'rx 6500', 'rx 6600', 'rx 6700', 'rtx 2080', 'rtx 2070', 'gtx 1080', 'gtx 1070', 'gtx 980', 'gtx 970', 'gtx 780', 'gtx 770', 'gtx 680', 'gtx 670', 'gtx 580', 'gtx 480', 'gtx 470']
-inputs.sort()
+inputs = [] #inputs are now taken from the inputs.txt file
 
+f = open("inputs.txt", "r")
+for line in f.readlines():
+    if line == "" or line == "\n":
+        continue
+    inputs.append(line.replace("\n",""))
 
 driver.get("https://www.ebay.com/")
 time.sleep(1)
@@ -53,9 +58,9 @@ time.sleep(1)
 #    item.clear()
 #    item.submit()
 
-f = open("/app/Details/cat.txt", "a")
-f.write("boo!\n")
-f.close()
+#f = open("/app/Details/cat.txt", "a")
+#f.write("boo!\n")
+#f.close()
 
 os.chdir(path + '/Details/')
 if os.path.exists(str(date.today())) == True:
@@ -103,7 +108,7 @@ for item in inputs:
         NumberOfPrices = 0
         counter = 0
         #print("PRICES: " + str(prices[0]))
-        driver.get_screenshot_as_file(path)
+        #driver.get_screenshot_as_file(path)
         for data in prices:
             if counter <= 20: #there used to be a AND here making it only do every other item I removed this and it sill seems to work
                 print("Added price:" + str(data.text))
@@ -113,7 +118,7 @@ for item in inputs:
                 if data.text.find("to") != -1:
                     print("Canceled line: " + str(data.text))
                     continue
-                elif float((data.text).replace('$', '').replace(',', '')) > 2000.00:
+                elif float((data.text).replace('$', '').replace(',', '')) > 4500.00:
                     print("Canceled line: " + str(data.text))
                     continue
                 elif data.text.find("HDD") != -1 or data.text.find("SSD") != -1:
@@ -129,10 +134,10 @@ for item in inputs:
         print("CombinedAverages:" + str(CombinedAverages))
         print("AddedPrices: " + str(AddedPrices))
         print("NumberOfPrices:" + str(NumberOfPrices))
-        CombinedAverages = CombinedAverages + AddedPrices/NumberOfPrices
+        CombinedAverages = CombinedAverages + AddedPrices/NumberOfPrices #for when using multiple search loops
 
     f.write(input + '\n')
     f.write(str(CombinedAverages/TestLoop) + '\n')
-    #print("Total Average for " + str(input) + ": " + str(CombinedAverages/3))
+    print("Total Average for " + str(input) + ": " + str(CombinedAverages/TestLoop))
 
 driver.quit()
