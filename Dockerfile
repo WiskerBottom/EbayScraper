@@ -1,5 +1,6 @@
 # Use the official Ubuntu image as a base
 FROM fedora:latest
+ENV TZ=US/Pacific
 
 # Install the required dependencies
 RUN dnf -y update && dnf install -y python3 python3-pip chromium-browser && dnf clean all

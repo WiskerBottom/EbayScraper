@@ -9,3 +9,4 @@ services:
     volumes:
       - ./Details:/app/Details
     command: python3 EbayScrapperV4.py
+    #command: date

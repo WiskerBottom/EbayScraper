@@ -1,0 +1,2 @@
+Attaching to EbayScrapper
+[KEbayScrapper exited with code 1
